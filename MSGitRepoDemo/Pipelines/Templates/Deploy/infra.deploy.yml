@@ -1,0 +1,61 @@
+jobs:
+   
+ - template: ../Build/build.yml   ## BASE JOB is here
+   parameters: 
+    env: ${{parameters.env}}
+    subscription: ${{parameters.subscription}}
+  
+ -  deployment: Build
+    displayName:  ' build from $(System.ArtifactsDirectory) or  $(Pipeline.Workspace) or $(Build.ArtifactStagingDirectory)' 
+    dependsOn:
+    - Base
+    pool:
+     vmImage: 'windows-latest'
+    environment: ${{parameters.env}}
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: VSBuild@1
+              inputs:
+                solution: '$(System.ArtifactsDirectory)/SolutionCode/WebAppUIDemo/WebAppUIDemo.sln'
+                msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+                platform: 'Any CPU'
+                configuration: 'Release'                                        
+
+
+ -  deployment: Download_Artifacts       
+    dependsOn:
+    - Build
+    pool:
+     vmImage: 'windows-latest'
+    environment: ${{parameters.env}}
+    strategy:
+        runOnce:
+          deploy:
+            steps:                                                 
+            - task: AzureRmWebAppDeployment@4
+              displayName: 'AzureRmWebAppDeployment@4 : Deploy from $(Pipeline.Workspace)'
+              inputs:
+                ConnectionType: 'AzureRM'
+                azureSubscription: ${{parameters.subscription}}
+                appType: 'webApp'
+                WebAppName: 'MSGitRepoDemo'
+                package: '$(Pipeline.Workspace)/drop/*.zip'
+
+ -  deployment: Publish_Artifacts        
+    dependsOn:
+    - Download_Artifacts
+    pool:
+     vmImage: 'windows-latest'
+    environment: ${{parameters.env}}
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: PublishBuildArtifacts@1
+              displayName: 'PublishBuildArtifacts from $(Pipeline.Workspace)'
+              inputs:
+                targetpath: '$(Pipeline.Workspace)'
+                artifactName: drop
+

@@ -1,0 +1,6 @@
+#package.yml  -- keep some key values (common variables like paths or foldernames ) used across all ymls ..declared in starting main.yml 
+variables:
+- name: infraScriptPath
+  value: 'Scripts'
+- name: infraTemplatePath
+  value: 'Templates'

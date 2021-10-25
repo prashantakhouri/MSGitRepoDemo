@@ -1,0 +1,5 @@
+jobs:
+ - template: ../Deploy/app.download.yml
+   parameters:
+     env: ${{parameters.env}}
+     subscription: ${{parameters.subscription}}

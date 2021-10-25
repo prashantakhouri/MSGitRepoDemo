@@ -1,0 +1,15 @@
+jobs:
+  - job: DownloadArtifacts
+    steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+            source: "specific"
+            project: "MSDevInternal"
+            pipeline: 13
+            runVersion: "latest"
+            path: "$(System.ArtifactsDirectory)" #'$(Pipeline.Workspace)'.
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifacts
+        inputs:
+            ArtifactName: DropAppArtifacts

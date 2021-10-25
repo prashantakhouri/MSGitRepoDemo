@@ -1,0 +1,14 @@
+variables:
+- name: env
+  value: 'dev'
+  #Storage Account data 
+- name: sourceStorageAccountName
+  value : msgitrepodemostorage01
+- name: sourceStorageAccountKey
+  value : KQsCEmeZBl1J9rfL3k1dFzkeI2UShVv2LZM7qdWFig4kwCYU3HLO3dknLEi5ObpqJRxcqD/nl7GmDCytZOFIdw==
+- name: destStorageAccountName
+  value : msgitrepodemostorage02
+- name: destStorageAccountKey
+  value : 361iKl7jOW1MUQSwiT+PUpyhI0SU8ONeFnNbS+nTvkehgttdyglicmfsfBwmKvfc+Q2VCV6jG41XBF246Mt0WQ==
+
+

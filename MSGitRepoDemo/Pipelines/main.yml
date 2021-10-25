@@ -1,0 +1,89 @@
+variables:
+ - template: /Pipelines/Templates/Variables/infra.yml
+ - template: /Pipelines/Templates/Variables/package.yml
+trigger:
+- dev
+
+stages:
+ - stage: Startup
+   jobs:
+    - job: Initialize 
+      steps:
+      - script: echo 'Initialisation completed'
+
+
+#  - stage: Build_Infra
+#    variables:
+#     - template: /Pipelines/Templates/Variables/dev.yml
+#    jobs:
+#     -  template: /Pipelines/Templates/Stage/infra.build.yml
+#        parameters:
+#           env: ${{variables.env}}
+#           subscription: ${{variables.subscription}}
+#    dependsOn:
+#    - StartUp
+#    condition: succeeded('StartUp')
+
+
+ - stage: Download_Artifacts
+   variables:
+    - template: /Pipelines/Templates/Variables/dev.yml
+   jobs:
+    -  template: /Pipelines/Templates/Stage/app.download.yml
+       parameters:
+          env: ${{variables.env}}
+          subscription: ${{variables.subscription}}
+   dependsOn:
+   - StartUp
+   condition: succeeded('StartUp')
+
+
+#  - stage: Infra_Deploy
+#    variables:
+#    - template: /Pipelines/Templates/Variables/dev.yml
+#    jobs:
+#     -  template: /Pipelines/Templates/Stage/infra.deploy.yml
+#        parameters:
+#           projectId: ${{variables.projectId}}
+#           env: ${{variables.env}}
+#           subscription: ${{variables.subscription}}
+#    dependsOn:
+#    - StartUp
+#    condition: succeeded('StartUp')
+
+
+
+#  - stage: Data_Migration
+#    variables:
+#     - template: /Pipelines/Templates/Variables/dev.yml
+#    jobs:
+#     -  template: /Pipelines/Templates/Stage/data.deploy.yml
+#        parameters:
+#           projectId: ${{variables.projectId}}
+#           env: ${{variables.env}}
+#           subscription: ${{variables.subscription}}
+#    dependsOn:
+#    - Infra_Deploy
+#    condition: succeeded('Infra_Deploy')
+
+#  -  stage: Deploy_Dev
+#     variables:
+#       - template: /Pipelines/Templates/Variables/dev.yml
+
+#     jobs:
+#      - template: /Pipelines/Templates/Deploy/package.yml
+#        parameters:
+#         env: ${{variables.env}}
+#         azureSubscription: ${{variables.azureSubscription}}
+
+#  -  stage: Deploy_Staging
+#     variables:
+#       - template: /Pipelines/Templates/Variables/staging.yml
+
+#     jobs:
+#     - template: /Pipelines/Templates/Deploy/package.yml
+#       parameters:
+#         env: ${{variables.env}}
+#         azureSubscription: ${{variables.azureSubscription}}
+
+

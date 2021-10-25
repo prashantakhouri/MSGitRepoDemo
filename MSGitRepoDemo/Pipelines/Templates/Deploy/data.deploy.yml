@@ -1,0 +1,50 @@
+jobs:
+ -  deployment: StorageTableCopy       
+    pool:
+     vmImage: 'windows-latest'
+    environment: ${{parameters.env}}
+    strategy:
+        runOnce:
+          deploy:
+            steps:                                                 
+            - template: /Pipelines/Templates/Infra/copyStorageData.yml
+              parameters:
+                subscription: ${{ parameters.subscription }}
+                sourceStorageAccountName: ${{ parameters.sourceStorageAccountName }}
+                sourceStorageAccountKey: ${{ parameters.sourceStorageAccountKey }}
+                destStorageAccountName: ${{ parameters.destStorageAccountName }}
+                destStorageAccountKey: ${{ parameters.destStorageAccountKey }}
+
+  # - task: CopyFiles@2
+  #   displayName: 'Copy Files from : $(Build.ArtifactStagingDirectory) to $(Pipeline.Workspace)'
+  #   inputs:
+  #     SourceFolder: '$(Build.ArtifactStagingDirectory)'
+  #     Contents: |
+  #      **/*
+  #      !.git/**/*
+  #     TargetFolder: '$(Pipeline.Workspace)'
+
+  # - task: DownloadPipelineArtifact@2
+   #  displayName: 'DownloadPipelineArtifact from  $(Pipeline.Workspace)'
+   #  inputs:
+    #   buildType: 'specific'
+     #  project: ${{parameters.projectId}}
+     #  definition: '19'
+      # buildVersionToDownload: 'latest'
+     #  targetPath: 'D:/a/1/a/WebApp.zip'
+                        
+  # - task: PublishBuildArtifacts@1
+  #   displayName: 'PublishBuildArtifacts from $(Pipeline.Workspace)'
+  #   inputs:
+  #     targetpath: '$(Pipeline.Workspace)'
+  #     artifactName: drop
+                  
+
+  # - task: AzureRmWebAppDeployment@4
+  #   displayName: 'AzureRmWebAppDeployment@4 : Deploy from $(Pipeline.Workspace)'
+  #   inputs:
+  #     ConnectionType: 'AzureRM'
+  #     azureSubscription: $(azureSubscription)
+  #     appType: 'webApp'
+  #     WebAppName: 'MSGitRepoDemo'
+  #     package: '$(Pipeline.Workspace)/*.zip'

@@ -1,0 +1,5 @@
+variables:
+- name: subscription
+  value: 'ES-CUS-Singapore_Police-DEV-spfadmins (988add30-e8e6-4fe5-8294-66519c31b342)'
+- name: projectId
+  value: 'a31e2375-1f92-44f1-8067-a8e27afa2c46'

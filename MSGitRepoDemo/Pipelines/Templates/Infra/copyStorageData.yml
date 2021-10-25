@@ -1,0 +1,47 @@
+steps:
+- task: AzurePowerShell@4
+  displayName: Copy Storage Table to Table 
+  inputs:
+     azureSubscription: "${{ parameters.subscription }}"
+     ScriptPath: '$(Agent.BuildDirectory)/Drop/Scripts/CopyAzStorageTableToTable.ps1'
+     ScriptArguments: ' -sourceStorageAccountName "${{ parameters.sourceStorageAccountName }}" -sourceStorageAccountKey "${{ parameters.sourceStorageAccountKey }}" -destStorageAccountName "${{ parameters.destStorageAccountName }}" -destStorageAccountKey "${{ parameters.destStorageAccountKey }}"'
+     azurePowerShellVersion: LatestVersion
+
+- task: AzurePowerShell@4
+  displayName: Copy Storage Blob to Blob 
+  inputs:
+     azureSubscription: "${{ parameters.subscription }}"
+     ScriptPath: '$(Agent.BuildDirectory)/Drop/Scripts/CopyAzStorageBlobToBlob.ps1'
+     ScriptArguments: ' -sourceStorageAccountName "${{ parameters.sourceStorageAccountName }}" -sourceStorageAccountKey "${{ parameters.sourceStorageAccountKey }}" -destStorageAccountName "${{ parameters.destStorageAccountName }}" -destStorageAccountKey "${{ parameters.destStorageAccountKey }}"'
+     azurePowerShellVersion: LatestVersion
+
+# $sourceStorageAccountName = "SOURCE_STORAGE_ACCOUNT_NAME"
+# $sourceStorageAccountKey = "SOURCE_STORAGE_ACCOUNT_ACCESS_KEY"
+# $destStorageAccountName = "DESTINATION_STORAGE_ACCOUNT_NAME"
+# $destStorageAccountKey = "DESTINATION_STORAGE_ACCOUNT_ACCESS_KEY"
+
+# - task: AzureResourceGroupDeployment@2
+#   displayName: Create Key Vault - ARM
+#   inputs:
+#     azureSubscription: "${{ parameters.azureSubscriptionName }}"
+#     resourceGroupName: "${{ parameters.resourceGroupName }}"
+#     location: "${{ parameters.deployLocation }}"
+#     csmFile: '$(Agent.BuildDirectory)/Drop/Templates/Key Vault/deploy.json'
+#     overrideParameters: '-accessPolicies "$(Infra.KeyVault.AccessPolicies)" -keyVaultName "${{ parameters.keyVaultName }}" -skuName "${{parameters.skuName}}"'
+
+
+
+
+
+# - task: AzurePowerShell@4
+#   displayName: Create DataProtection Key
+#   inputs:
+#     azureSubscription: "${{ parameters.azureSubscriptionName }}"
+#     scriptType: inlineScript
+#     inline: |
+#         $key = Get-AzKeyVaultKey -VaultName "${{ parameters.keyVaultName }}" -Name 'dataprotection'
+#         if (!$key) {
+#           Add-AzKeyVaultKey -VaultName "${{ parameters.keyVaultName }}" -Name 'dataprotection' -Destination 'Software'
+#         }
+#     azurePowerShellVersion: LatestVersion
+
